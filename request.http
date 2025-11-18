@@ -1,0 +1,36 @@
+
+### Get customers
+GET http://localhost:3000/customers
+Idempotency-Key: 1
+
+
+### add customer
+POST http://localhost:3000/customers
+Content-Type: application/json
+Idempotency-Key: 1232
+
+{
+    "customer": {
+        "name": "Customer 1",
+        "address": "Street 1, Thimphu Bhutan",
+        "taxNumber": "BTN-12345"
+    }
+}
+
+
+### Update customer
+PUT http://localhost:3000/customers/b38be10c-411b-4d08-960c-de687be633bd
+Content-Type: application/json
+Idempotency-Key: 123
+
+{
+    "customer": {
+        "name": "Customer 1 - update"
+    }
+}
+
+
+### read Redis
+GET http://localhost:3000/redis/all
+Content-Type: application/json
+Idempotency-Key: 123
