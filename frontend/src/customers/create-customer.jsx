@@ -129,7 +129,7 @@ const Createcustomer = ({ customer }) => {
   }
 
   return (
-    <div className="bg-gray-50 border border-gray-200 p-8 rounded-lg">
+    <div className="bg-gray-50 border border-gray-200 p-8 rounded-lg text-left">
       <h1 className="text-2xl font-medium mb-8">
         {customer ? "Edit Customer Form" : "Create Customer Form"}
       </h1>
