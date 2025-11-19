@@ -19,15 +19,14 @@ import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const idempotencyId = uuid();
 
@@ -76,32 +75,40 @@ const formSchema = z
     }
   );
 
-const Createcustomer = () => {
+const Createcustomer = ({ customer }) => {
+  const navigate = useNavigate();
+
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      taxNumber: "",
-      active: false,
-      address: "",
-      type: "",
-    },
+    defaultValues: customer
+      ? { ...customer }
+      : {
+          name: "",
+          taxNumber: "",
+          active: false,
+          address: "",
+          type: "",
+        },
   });
 
   // 2. Define a submit handler.
   async function onSubmit(values) {
-    console.log(values);
     try {
-      const result = await fetch("http://localhost:3000/customers", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Idempotency-Key": idempotencyId,
-        },
-        body: JSON.stringify({
-          customer: { ...values },
-        }),
-      });
+      const result = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/customers${
+          customer ? "/" + customer.id : ""
+        }`,
+        {
+          method: customer ? "PUT" : "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Idempotency-Key": idempotencyId,
+          },
+          body: JSON.stringify({
+            customer: { ...values, ...(customer && { id: customer.id }) },
+          }),
+        }
+      );
 
       if (result.status === 400) {
         return result.json().then((errorData) => {
@@ -110,14 +117,22 @@ const Createcustomer = () => {
       }
 
       await result.json();
-      toast.success(`Customer "${values.name}" created successfully.`);
+      toast.success(
+        customer
+          ? `Customer "${values.name}" edited successfully.`
+          : `Customer "${values.name}" created successfully.`
+      );
+      navigate("/customers");
     } catch (e) {
       toast.error("Error occurred:" + e);
     }
   }
 
   return (
-    <div>
+    <div className="bg-gray-50 border border-gray-200 p-8 rounded-lg">
+      <h1 className="text-2xl font-medium mb-8">
+        {customer ? "Edit Customer Form" : "Create Customer Form"}
+      </h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -199,7 +214,7 @@ const Createcustomer = () => {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <Button type="submit">{customer ? "Save" : "Submit"}</Button>
         </form>
       </Form>
     </div>

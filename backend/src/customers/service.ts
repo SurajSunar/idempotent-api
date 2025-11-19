@@ -8,6 +8,10 @@ export class CustomerService {
     return customers;
   }
 
+  getbyId(id: string) {
+    return customers.find((row) => row.id === id);
+  }
+
   add(customer: Partial<Customer>) {
     customer.id = uuidv4();
     const newCustomer = { ...customer, id: uuidv4() } as Customer;

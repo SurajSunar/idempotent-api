@@ -22,9 +22,12 @@ const CustomerListPage = () => {
         setError("");
         setIsLoading(true);
 
-        const result = await fetch("http://localhost:3000/customers", {
-          headers: { "Idempotency-Key": 1 },
-        });
+        const result = await fetch(
+          `${import.meta.env.VITE_BASE_URL}/customers`,
+          {
+            headers: { "Idempotency-Key": 1 },
+          }
+        );
 
         const { customers } = await result.json();
 
@@ -48,13 +51,16 @@ const CustomerListPage = () => {
         </Button>
       </div>
 
-      <Table>
+      <Table className="text-left">
         <TableCaption>List of customers</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">Name</TableHead>
             <TableHead>Address</TableHead>
-            <TableHead className="text-right">TaxNumber</TableHead>
+            <TableHead>TaxNumber</TableHead>
+            <TableHead>Type</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="text-right">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -65,7 +71,14 @@ const CustomerListPage = () => {
               <TableRow key={cust.name}>
                 <TableCell className="font-medium">{cust.name}</TableCell>
                 <TableCell>{cust.address}</TableCell>
-                <TableCell className="text-right">{cust.taxNumber}</TableCell>
+                <TableCell>{cust.taxNumber}</TableCell>
+                <TableCell className="capitalize">{cust.type}</TableCell>
+                <TableCell>{cust.active ? "Active" : "Inactive"}</TableCell>
+                <TableCell className="text-right">
+                  <Button>
+                    <a href={`/customers/${cust.id}`}>Edit</a>
+                  </Button>
+                </TableCell>
               </TableRow>
             ))
           )}

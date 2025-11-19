@@ -33,6 +33,20 @@ customerRouter.post("/", async (req: Request, res: Response) => {
   });
 });
 
+customerRouter.get("/:id", async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const customer = new CustomerService().getbyId(id as string);
+
+    return res.send({
+      customer,
+    });
+  } catch (error) {
+    res.sendStatus(500);
+  }
+});
+
 customerRouter.put("/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
