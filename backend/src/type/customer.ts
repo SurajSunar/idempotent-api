@@ -3,4 +3,6 @@ export interface Customer {
   name: string;
   address: string;
   taxNumber: string;
+  active: boolean;
+  type: string;
 }

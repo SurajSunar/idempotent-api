@@ -3,11 +3,14 @@ import express, { type Request, type Response } from "express";
 import customerRouter from "./customers/route.ts";
 import { idempotencyMiddleware } from "./idempotent/index.ts";
 import redisRouter from "./redis/route.ts";
+import cors from "cors";
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
+
+app.use(cors());
 
 app.use(express.urlencoded({ extended: true }));
 
