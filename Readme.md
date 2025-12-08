@@ -59,6 +59,15 @@ Add new customer records.
 Edit Customer Page
 Update existing customer details.
 
+📘 Purpose of the Project
+
+This codebase is designed for developers who want to:
+Understand how idempotency works in real applications
+Learn how to integrate Redis caching for idempotent APIs
+Explore full-stack CRUD workflows
+Practice designing resilient backend operations
+Build clean React interfaces that interact with an API
+
 🌐 Technologies
 React
 shadcn/ui
